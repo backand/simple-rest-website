@@ -12,7 +12,7 @@ You will need:
 2. Once the API is running, run the following commands
 
   ```bash
-  git clone git@github.com:simpulton/simple-rest-website.git
+  git clone git@github.com:backand/simple-rest-website.git
   cd simple-rest-website
   npm install -g serve
   serve public
