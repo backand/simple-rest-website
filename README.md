@@ -7,7 +7,7 @@ You will need:
 * [NodeJS and NPM](https://gist.github.com/isaacs/579814)
 
 ## Getting Started
-1. Create new App in backand with this model:
+1. Create new App in Backand with the following model:
 ```json
 [
   {
@@ -26,7 +26,7 @@ You will need:
 ]
 ```
 
-2. Once the App is ready, run the following commands
+2. Once the App is ready, run the following commands:
 
   ```bash
   git clone git@github.com:backand/simple-rest-website.git
@@ -36,6 +36,7 @@ You will need:
   ```
 
 3. Navigate to [localhost:3000](http://localhost:3000)
+
 4. Hooray! Now you can interact with the API! How simple was that??
 
-* To login use your Backand's username and password 
+** To login use your Backand's username and password 
