@@ -1,18 +1,35 @@
 # Simple REST Website 
-A simple website demonstrating CRUD, built using AngularJS, and powered by [Simple REST API](https://github.com/simpulton/simple-rest-api).
+A simple website demonstrating CRUD, built using AngularJS, and powered by [Backand](https://www.backand.com).
 
 ## Prerequisites
 You will need:
 * [Git](http://git-scm.com/)
 * [NodeJS and NPM](https://gist.github.com/isaacs/579814)
-* [Simple REST API](https://github.com/simpulton/simple-rest-api)
 
 ## Getting Started
-1. Head over to [Simple REST API](https://github.com/simpulton/simple-rest-api) and follow the directions there to run the API.
-2. Once the API is running, run the following commands
+1. Create new App in backand with this model:
+```json
+[
+  {
+    "name": "items",
+    "fields": [
+      {
+        "name": "name",
+        "type": "ShortText"
+      },
+      {
+        "name": "description",
+        "type": "LongText"
+      }
+    ]
+  }
+]
+```
+
+2. Once the App is ready, run the following commands
 
   ```bash
-  git clone git@github.com:simpulton/simple-rest-website.git
+  git clone git@github.com:backand/simple-rest-website.git
   cd simple-rest-website
   npm install -g serve
   serve public
@@ -20,3 +37,5 @@ You will need:
 
 3. Navigate to [localhost:3000](http://localhost:3000)
 4. Hooray! Now you can interact with the API! How simple was that??
+
+* To login use your Backand's username and password 
