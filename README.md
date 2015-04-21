@@ -8,24 +8,24 @@ You will need:
 
 ## Getting Started
 1. Create new App in Backand with the following model:
-```json
-[
-  {
-    "name": "items",
-    "fields": [
-      {
-        "name": "name",
-        "type": "ShortText"
-      },
-      {
-        "name": "description",
-        "type": "LongText"
-      }
-    ]
-  }
-]
-```
-
+  ```json
+  [
+    {
+      "name": "items",
+      "fields": [
+        {
+          "name": "name",
+          "type": "ShortText"
+        },
+        {
+          "name": "description",
+          "type": "LongText"
+        }
+      ]
+    }
+  ]
+  ```
+  
 2. Once the App is ready, run the following commands:
 
   ```bash
