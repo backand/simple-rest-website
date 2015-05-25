@@ -1,4 +1,4 @@
-angular.module('SimpleRESTWebsite', ['angular-storage', 'ui.router', 'backand', 'ngCookies'])
+angular.module('SimpleRESTWebsite', ['angular-storage', 'ui.router', 'backand')
     .config(function($stateProvider, $urlRouterProvider, $httpProvider) {
         $stateProvider
             .state('login', {
@@ -18,13 +18,9 @@ angular.module('SimpleRESTWebsite', ['angular-storage', 'ui.router', 'backand', 
 
         $httpProvider.interceptors.push('APIInterceptor');
     })
-    .service('APIInterceptor', function($rootScope, $cookieStore) {
+    .service('APIInterceptor', function($rootScope) {
         var service = this;
 
-        service.request = function(config) {
-            config.headers['Authorization'] = $cookieStore.get('backand_token');
-            return config;
-        };
 
         service.responseError = function(response) {
             if (response.status === 401) {
@@ -76,11 +72,11 @@ angular.module('SimpleRESTWebsite', ['angular-storage', 'ui.router', 'backand', 
     })
     .service('ItemsModel', function ($http, Backand) {
         var service = this,
-            tableUrl = '/1/table/data/',
+            tableUrl = '/1/objects/',
             path = 'items/';
 
         function getUrl() {
-            return Backand.configuration.apiUrl + tableUrl + path;
+            return Backand.getApiUrl() + tableUrl + path;
         }
 
         function getUrlForId(itemId) {
@@ -107,13 +103,12 @@ angular.module('SimpleRESTWebsite', ['angular-storage', 'ui.router', 'backand', 
             return $http.delete(getUrlForId(itemId));
         };
     })
-    .controller('LoginCtrl', function($rootScope, $state, Backand, $cookieStore, UserService){
+    .controller('LoginCtrl', function($rootScope, $state, Backand, UserService){
         var login = this;
 
         function signin() {
             Backand.signin(login.email, login.password, login.appName)
                 .then(function(token) {
-                    $cookieStore.put(Backand.configuration.tokenName, token);
                     $rootScope.$broadcast('authorized');
                     $state.go('dashboard');
                 }, function(error) {
