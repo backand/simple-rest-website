@@ -31,7 +31,7 @@ You will need:
   ```bash
   git clone git@github.com:backand/simple-rest-website.git
   cd simple-rest-website
-  npm install -g serve
+  sudo npm install -g serve
   serve public
   ```
 
