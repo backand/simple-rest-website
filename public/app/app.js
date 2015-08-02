@@ -72,7 +72,9 @@ angular.module('SimpleRESTWebsite', ['angular-storage', 'ui.router', 'backand'])
     var login = this;
 
     function signin() {
-        Backand.signin(login.email, login.password, login.appName)
+        Backand.setAppName(login.appName);
+
+        Backand.signin(login.email, login.password)
             .then(function() {
                 $rootScope.$broadcast('authorized');
                 $state.go('dashboard');
