@@ -1,7 +1,6 @@
 angular.module('SimpleRESTWebsite', ['angular-storage', 'ui.router', 'backand'])
 
 .config(function(BackandProvider, $stateProvider, $urlRouterProvider, $httpProvider) {
-    BackandProvider.manageDefaultHeaders();
     //BackandProvider.setAnonymousToken('Your Anonymous Token');
     //BackandProvider.setSignUpToken('Your SignUp Token');
     $stateProvider
