@@ -24,7 +24,6 @@ angular.module('SimpleRESTWebsite', ['angular-storage', 'ui.router', 'backand'])
 .service('APIInterceptor', function($rootScope, $q) {
     var service = this;
 
-
     service.responseError = function(response) {
         if (response.status === 401) {
             $rootScope.$broadcast('unauthorized');
@@ -163,7 +162,7 @@ angular.module('SimpleRESTWebsite', ['angular-storage', 'ui.router', 'backand'])
              item.bigPictureUrl = result.data.url;
              ItemsModel.create(item)
                     .then(function(result) {
-                        console.log('create success')
+//                        console.log('create success')
                         initCreateForm();
                         getItems();
                     })
@@ -180,6 +179,7 @@ angular.module('SimpleRESTWebsite', ['angular-storage', 'ui.router', 'backand'])
 
         if (!item.bigPictureUrlLast) {
             if(item.bigPictureName) {
+            //    console.log('case1 no last imageLoaded');
             ItemsModel.create2(item)
                 .then(function(result){
                     item.bigPictureUrl = result.data.url;
@@ -189,8 +189,9 @@ angular.module('SimpleRESTWebsite', ['angular-storage', 'ui.router', 'backand'])
                         getItems();
                 });
             })        
-            }
+        }
             else {
+              //  console.log('case2 imageLoaded');
             ItemsModel.update(item.id, item)
                 .then(function (result) {
                     cancelEditing();
@@ -198,35 +199,44 @@ angular.module('SimpleRESTWebsite', ['angular-storage', 'ui.router', 'backand'])
                 });
             }
         } else {
-            var compare = item.bigPictureUrlLast.slice(34);
-
-            if(item.bigPictureName !== compare) {
-                ItemsModel.deleteOldFile(item, compare).then(function(){
-                     console.log('last file deleted');
-                     ItemsModel.create2(item)
-                     .then(function(result){
-                        item.bigPictureUrl = result.data.url;
-                    ItemsModel.update(item.id, item)
-                        .then(function (result) {
-                    cancelEditing();
-                    getItems();
-                });
-                     })
-                })    
-            } else {
+            if(!item.bigPictureName) {
+            //console.log('case3 imageLast but not update');
             ItemsModel.update(item.id, item)
                 .then(function (result) {
                     cancelEditing();
                     getItems();
                 });
+            } else{
+                var compare = item.bigPictureUrlLast.slice(48);    
 
+                if(item.bigPictureName !== compare) {
+                    ItemsModel.deleteOldFile(item, compare).then(function(){
+                         console.log('last file deleted');
+                        ItemsModel.create2(item)
+                        .then(function(result){
+                            item.bigPictureUrl = result.data.url;
+                        ItemsModel.update(item.id, item)
+                            .then(function (result) {
+                        cancelEditing();
+                        getItems();
+                    });
+                        })
+                    })    
+            } else {
+                //console.log('case5 imageLoaded same');
+            ItemsModel.update(item.id, item)
+                .then(function (result) {
+                    cancelEditing();
+                    getItems();
+                });
             }
-        } 
+        }
     }
+}
 
     function deleteItem(item) {
-        console.log(item);
-            if(!item.bigPictureUrl || !item.bigPictureUrl) {
+
+            if(!item.bigPictureUrl) {
                 ItemsModel.destroy(item.id)
                 .then(function (result) {
                     cancelEditing();
@@ -247,14 +257,11 @@ angular.module('SimpleRESTWebsite', ['angular-storage', 'ui.router', 'backand'])
             }
         }
 
-
     function initCreateForm() {
         dashboard.newItem = {name: '', description: '', avatarBase:'', bigPictureUrl:'', bigPictureBase:'', bigPictureName:'', bigPictureUrlLast:''};
     }
 
-
     function setEditedItem(item) {
-        item.avatarBaseLast =  item.avatarBase;
         item.bigPictureUrlLast =  item.bigPictureUrl;
         dashboard.editedItem = angular.copy(item);
         dashboard.isEditing = true;
