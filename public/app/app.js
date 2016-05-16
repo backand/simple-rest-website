@@ -207,10 +207,11 @@ angular.module('SimpleRESTWebsite', ['angular-storage', 'ui.router', 'backand'])
                     getItems();
                 });
             } else{
-                var compare = item.bigPictureUrlLast.slice(48);    
+                var compare = item.bigPictureUrlLast.slice(48);   
+                var deleteFileName = item.bigPictureUrl.slice(34);
 
                 if(item.bigPictureName !== compare) {
-                    ItemsModel.deleteOldFile(item, compare).then(function(){
+                    ItemsModel.deleteOldFile(item, deleteFileName).then(function(){
                          console.log('last file deleted');
                         ItemsModel.create2(item)
                         .then(function(result){
