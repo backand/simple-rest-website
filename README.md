@@ -1,6 +1,8 @@
 # Simple REST Website 
 A simple website demonstrating CRUD, built using AngularJS, and powered by [Backand](https://www.backand.com).
 
+Hello again, this time i implemented upload image to backand, fork from simple-rest-website demo by backand.
+
 ## Prerequisites
 You will need:
 * [Git](http://git-scm.com/)
@@ -12,14 +14,41 @@ You will need:
 [
   {
     "name": "items",
-    "fields": {
+      "fields": {
       "name": {
-        "type": "string"
+      "type": "string"
       },
-      "description": {
-        "type": "text"
+    "description": {
+      "type": "text"
+      },
+    "avatarBase": {
+      "type": "text"
+      },
+    "bigPictureUrl": {
+      "type": "string"
+      },
+    "user": {
+      "object": "users"
       }
     }
+  },
+{
+  "name": "users",
+  "fields": {
+    "email": {
+      "type": "string"
+    },
+    "firstName": {
+      "type": "string"
+    },
+    "lastName": {
+      "type": "string"
+    },
+    "items": {
+      "collection": "items",
+      "via": "user"
+    }
+  }
   }
 ]
 
