@@ -14,41 +14,20 @@ You will need:
 [
   {
     "name": "items",
-      "fields": {
+    "fields": {
       "name": {
-      "type": "string"
+        "type": "string"
       },
-    "description": {
+      "description": {
+        "type": "text"
+      },
+      "avatarBase": {
       "type": "text"
       },
-    "avatarBase": {
-      "type": "text"
-      },
-    "bigPictureUrl": {
+      "bigPictureUrl": {
       "type": "string"
-      },
-    "user": {
-      "object": "users"
       }
     }
-  },
-{
-  "name": "users",
-  "fields": {
-    "email": {
-      "type": "string"
-    },
-    "firstName": {
-      "type": "string"
-    },
-    "lastName": {
-      "type": "string"
-    },
-    "items": {
-      "collection": "items",
-      "via": "user"
-    }
-  }
   }
 ]
 
