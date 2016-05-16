@@ -1,5 +1,5 @@
 # Simple REST Website 
-A simple website demonstrating CRUD, built using AngularJS, and powered by [Backand](https://www.backand.com).
+A simple website demonstrating CRUD + upload image, built using AngularJS, and powered by [Backand](https://www.backand.com).
 
 Hello again, this time i implemented upload image to backand, fork from simple-rest-website demo by backand.
 
