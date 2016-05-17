@@ -36,7 +36,7 @@ You will need:
 2. Once the App is ready, run the following commands:
 
   ```bash
-  git clone git@github.com:backand/simple-rest-website.git
+  git clone https://github.com/abdulMuhit/simple-rest-website.git
   cd simple-rest-website
   sudo npm install -g serve
   serve public
