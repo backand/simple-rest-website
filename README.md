@@ -94,11 +94,12 @@ for future research see this doc: http://docs.backand.com/en/latest/apidocs/file
 
 6 - You can also host this web project in backand, use backand hosting.
 
-a. Just go to Hosting Tab, the intruction there is very clear and helpfull.
+a. Just go to Hosting Tab, the instruction there is very clear and helpfull.
 
 b. and then go to your project link. it so easy and clear, i think you wont gonna miss it. :-)
 
 7 - Hooray! Now you can interact with the API! How simple was that?? And i say yes, back& make it so simple. :-)
 
 ** To login use your Backand's username and password
-*** Sorry about my english.
+
+*** Sorry about my english/grammar.
