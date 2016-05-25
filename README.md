@@ -11,8 +11,9 @@ You will need:
 
 ## Getting Started
 
-1. create an account in https://www.backand.com and create new app
-2. use this following json model in the object model tab:
+1 - create an account in https://www.backand.com and create new app
+
+2 - use this following json model in the object model tab:
 
 ```json
 [
@@ -37,7 +38,7 @@ You will need:
 
 ```
 
-3. create server side code for uploading bigger image.
+3 - create server side code for uploading bigger image.
 
 a. in the object tab, click items tab, then click again actions tab.
 
@@ -80,7 +81,7 @@ else if (request.method == "DELETE"){
 
 for future research see this doc: http://docs.backand.com/en/latest/apidocs/files/index.html
   
-4. Once the App is ready, run the following commands:
+4 - Once the App is ready, run the following commands:
 
   ```bash
   git clone https://github.com/abdulMuhit/simple-rest-website.git
@@ -89,11 +90,15 @@ for future research see this doc: http://docs.backand.com/en/latest/apidocs/file
   serve public
   ```
 
-5. Navigate to [localhost:3000](http://localhost:3000)
-6. You can also host this web project in backand, use backand hosting.
+5 - Navigate to [localhost:3000](http://localhost:3000)
+
+6 - You can also host this web project in backand, use backand hosting.
+
 a. Just go to Hosting Tab, the intruction there is very clear and helpfull.
+
 b. and then go to your project link. it so easy and clear, i think you wont gonna miss it. :-)
 
-7. Hooray! Now you can interact with the API! How simple was that?? & i say yes back& made it so simple. :-)
+7 - Hooray! Now you can interact with the API! How simple was that?? And i say yes, back& make it so simple. :-)
 
 ** To login use your Backand's username and password
+*** Sorry about my english.
