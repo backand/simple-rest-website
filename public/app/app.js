@@ -24,7 +24,6 @@ angular.module('SimpleRESTWebsite', ['angular-storage', 'ui.router', 'backand'])
 .service('APIInterceptor', function($rootScope, $q) {
     var service = this;
 
-
     service.responseError = function(response) {
         if (response.status === 401) {
             $rootScope.$broadcast('unauthorized');
@@ -36,7 +35,9 @@ angular.module('SimpleRESTWebsite', ['angular-storage', 'ui.router', 'backand'])
 .service('ItemsModel', function ($http, Backand) {
     var service = this,
         tableUrl = '/1/objects/',
-        path = 'items/';
+        path = 'items/',
+        baseActionUrl = tableUrl + 'action/',
+        filesActionName = 'otherFiles';
 
     function getUrl() {
         return Backand.getApiUrl() + tableUrl + path;
@@ -57,6 +58,42 @@ angular.module('SimpleRESTWebsite', ['angular-storage', 'ui.router', 'backand'])
     service.create = function (item) {
         return $http.post(getUrl(), item);
     };
+
+    service.create2 = function (item) {
+            var randomFileName = "bigFileImage"+Math.floor((Math.random() * 10 + 1) + 1 )+ Math.floor((Math.random() * 10 + 1) + 1) + item.bigPictureName;//file.name;
+        return $http({
+            method: 'POST',
+            url : Backand.getApiUrl() + baseActionUrl +  path,
+            params:{
+                "name": filesActionName
+            },
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            // you need to provide the file name and the file data
+            data: {
+                "filename": randomFileName,
+                "filedata": item.bigPictureBase.substr(item.bigPictureBase.indexOf(',') + 1, item.bigPictureBase.length), //need to remove the file prefix type
+            }
+        })
+        };
+
+    service.deleteOldFile = function(item, deleteFileName){
+               return $http({
+                    method: 'DELETE',
+                    url : Backand.getApiUrl() + baseActionUrl +  path,
+                    params:{
+                        "name": filesActionName
+                    },
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    // you need to provide the file name 
+                    data: {
+                        "filename": deleteFileName
+                    }
+                });
+        }
 
     service.update = function (itemId, item) {
         return $http.put(getUrlForId(itemId), item);
@@ -105,7 +142,6 @@ angular.module('SimpleRESTWebsite', ['angular-storage', 'ui.router', 'backand'])
 
 .controller('DashboardCtrl', function(ItemsModel){
     var dashboard = this;
-
     function getItems() {
         ItemsModel.all()
             .then(function (result) {
@@ -114,34 +150,120 @@ angular.module('SimpleRESTWebsite', ['angular-storage', 'ui.router', 'backand'])
     }
 
     function createItem(item) {
-        ItemsModel.create(item)
-            .then(function (result) {
-                initCreateForm();
-                getItems();
-            });
-    }
-
+            if(item.bigPictureName == "") {
+                ItemsModel.create(item)
+                .then(function (result) {
+                    initCreateForm();
+                    getItems();
+                });  
+            } else {
+                ItemsModel.create2(item)
+                .then(function (result) {
+             item.bigPictureUrl = result.data.url;
+             ItemsModel.create(item)
+                    .then(function(result) {
+//                        console.log('create success')
+                        initCreateForm();
+                        getItems();
+                    })
+                });
+            }
+// ugly clear
+        var a = document.getElementById('showPic');
+        a.src="";
+        var b = document.getElementById('showPic2');
+        b.src = "";
+        } 
+        
     function updateItem(item) {
-        ItemsModel.update(item.Id, item)
-            .then(function (result) {
-                cancelEditing();
-                getItems();
-            });
-    }
 
-    function deleteItem(itemId) {
-        ItemsModel.destroy(itemId)
-            .then(function (result) {
-                cancelEditing();
-                getItems();
-            });
+        if (!item.bigPictureUrlLast) {
+            if(item.bigPictureName) {
+            //    console.log('case1 no last imageLoaded');
+            ItemsModel.create2(item)
+                .then(function(result){
+                    item.bigPictureUrl = result.data.url;
+                    ItemsModel.update(item.id, item)
+                        .then(function (result) {
+                        cancelEditing();
+                        getItems();
+                });
+            })        
+        }
+            else {
+              //  console.log('case2 imageLoaded');
+            ItemsModel.update(item.id, item)
+                .then(function (result) {
+                    cancelEditing();
+                    getItems();
+                });
+            }
+        } else {
+            if(!item.bigPictureName) {
+            //console.log('case3 imageLast but not update');
+            ItemsModel.update(item.id, item)
+                .then(function (result) {
+                    cancelEditing();
+                    getItems();
+                });
+            } else{
+                var compare = item.bigPictureUrlLast.slice(48);   
+                var deleteFileName = item.bigPictureUrl.slice(34);
+
+                if(item.bigPictureName !== compare) {
+                    ItemsModel.deleteOldFile(item, deleteFileName).then(function(){
+                         console.log('last file deleted');
+                        ItemsModel.create2(item)
+                        .then(function(result){
+                            item.bigPictureUrl = result.data.url;
+                        ItemsModel.update(item.id, item)
+                            .then(function (result) {
+                        cancelEditing();
+                        getItems();
+                    });
+                        })
+                    })    
+            } else {
+                //console.log('case5 imageLoaded same');
+            ItemsModel.update(item.id, item)
+                .then(function (result) {
+                    cancelEditing();
+                    getItems();
+                });
+            }
+        }
     }
+}
+
+    function deleteItem(item) {
+
+            if(!item.bigPictureUrl) {
+                ItemsModel.destroy(item.id)
+                .then(function (result) {
+                    cancelEditing();
+                    getItems();
+                });   
+            } else {
+                var deleteFileName = item.bigPictureUrl.slice(34);
+                ItemsModel.deleteOldFile(item, deleteFileName)
+
+                  .then(function(){
+                    console.log('file deleted');
+                    ItemsModel.destroy(item.id)
+                        .then(function (result) {
+                    cancelEditing();
+                    getItems();
+                });
+                })
+            }
+        }
 
     function initCreateForm() {
-        dashboard.newItem = { name: '', description: '' };
+        dashboard.newItem = {name: '', description: '', avatarBase:'', bigPictureUrl:'', bigPictureBase:'', bigPictureName:'', bigPictureUrlLast:''};
     }
 
     function setEditedItem(item) {
+        item.bigPictureUrlLast =  item.bigPictureUrl;
         dashboard.editedItem = angular.copy(item);
         dashboard.isEditing = true;
     }
@@ -155,6 +277,62 @@ angular.module('SimpleRESTWebsite', ['angular-storage', 'ui.router', 'backand'])
         dashboard.isEditing = false;
     }
 
+    function uploadFile() {
+        var filesSelected = document.getElementById("myFile").files;
+    if (filesSelected.length > 0) {
+        var fileToLoad = filesSelected[0];
+        if (fileToLoad.type.match("image.*") && fileToLoad.size < 100000 )
+        {
+            var fileReader = new FileReader();
+            fileReader.onload = function(fileLoadedEvent) 
+            {
+                var imageLoaded = document.getElementById("showPic");
+                imageLoaded.src = fileLoadedEvent.target.result;
+            if(dashboard.isEditing) {
+                dashboard.editedItem.avatarBase = fileLoadedEvent.currentTarget.result;
+                console.log('test1');
+            } else { 
+                dashboard.newItem.avatarBase = fileLoadedEvent.currentTarget.result;
+                console.log('test2');
+            } 
+
+            };
+            fileReader.readAsDataURL(fileToLoad);
+        } else {
+            alert('file is not an image or exceed 1 Mb');
+            }    
+        }
+    }
+
+function uploadFile2() {
+    var filesSelected = document.getElementById("myFile2").files;
+    if (filesSelected.length > 0) {
+        var fileToLoad = filesSelected[0];
+        if (fileToLoad.type.match("image.*"))
+        {
+            var fileReader = new FileReader();
+            fileReader.onload = function(fileLoadedEvent) 
+            {
+                var imageLoaded = document.getElementById("showPic2");
+                imageLoaded.src = fileLoadedEvent.target.result;
+                
+            if(dashboard.isEditing) {
+                dashboard.editedItem.bigPictureName = fileToLoad.name;
+                dashboard.editedItem.bigPictureBase = fileLoadedEvent.currentTarget.result;
+
+            } else {
+                dashboard.newItem.bigPictureName = fileToLoad.name;
+                dashboard.newItem.bigPictureBase = fileLoadedEvent.currentTarget.result;
+            } 
+
+            };
+            fileReader.readAsDataURL(fileToLoad);
+        } else {
+            alert('file is not an image');
+            }
+        }
+    }
+    
     dashboard.items = [];
     dashboard.editedItem = null;
     dashboard.isEditing = false;
@@ -166,6 +344,19 @@ angular.module('SimpleRESTWebsite', ['angular-storage', 'ui.router', 'backand'])
     dashboard.isCurrentItem = isCurrentItem;
     dashboard.cancelEditing = cancelEditing;
 
+    dashboard.uploadFile2 = uploadFile2;
+    dashboard.uploadFile = uploadFile;
+
     initCreateForm();
     getItems();
+})
+
+.directive('customOnChange', function() {
+  return {
+    restrict: 'A',
+    link: function (scope, element, attrs) {
+      var onChangeFunc = scope.$eval(attrs.customOnChange);
+      element.bind('change', onChangeFunc);
+    }
+  };
 });

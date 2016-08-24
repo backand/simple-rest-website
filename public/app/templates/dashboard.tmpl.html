@@ -3,11 +3,22 @@
         <div class="item" ng-repeat="item in dashboard.items"
              ng-click="dashboard.setEditedItem(item)"
              ng-class="{'active':dashboard.isCurrentItem(item.Id)}">
-
-            <button type="button" class="close" ng-click="dashboard.deleteItem(item.Id)">&times;</button>
+            
+            <button type="button" class="close" ng-click="dashboard.deleteItem(item)">&times;</button>
             <h3>{{item.name}}</h3>
 
             <p><strong>{{item.description}}</strong></p>
+
+            <div class="item item-body">
+            <div class="item">
+                <img ng-src="{{item.avatarBase}}" width="100" height="100">
+                <span class="">Avatar</span>
+            </div>
+            <div class="item">
+                <img ng-src="{{item.bigPictureUrl}}" width="150" height="150">
+                <span class="">Big Picture</span>
+            </div>
+            </div>
         </div>
     </div>
 </div>
@@ -18,6 +29,7 @@
         <hr/>
         <form class="create-form" role="form"
               ng-submit="dashboard.createItem(dashboard.newItem)" novalidate>
+
             <div class="form-group">
                 <label>Item Name</label>
                 <input type="text" class="form-control"
@@ -30,6 +42,20 @@
                        ng-model="dashboard.newItem.description"
                        placeholder="Enter description">
             </div>
+
+            <div class="form-group">
+            <div class="col-md-6">
+                <input id="myFile" type="file" custom-on-change="dashboard.uploadFile"/>
+                    <img id="showPic" width="100" height="100" />
+                    <span class="">Avatar</span>
+            </div>
+              <div class="col-md-6">
+                <input id="myFile2" type="file" custom-on-change="dashboard.uploadFile2"/>
+                    <img id="showPic2" width="100" height="100" />
+                    <span class="">Big Picture</span>
+              </div>
+            </div>
+                    
             <button type="submit" class="btn btn-info btn-lg">Create</button>
         </form>
     </div>
@@ -51,6 +77,32 @@
                        ng-model="dashboard.editedItem.description"
                        placeholder="Enter description">
             </div>
+                    
+        <div class="form-group">
+          <div class="row">
+            <div class="col-xs-6">
+            <input id="myFile" type="file" custom-on-change="dashboard.uploadFile"/><br>
+              <span>Avatar</span><br>
+              <img ng-src="{{dashboard.editedItem.avatarBase}}" width="100" height="100">
+              <span>Old Avatar</span><br>
+              
+              <img id="showPic" width="100" height="100" />
+              <span>New Avatar</span>
+              </div>
+              
+              <div class="col-xs-6">
+                <input id="myFile2" type="file" custom-on-change="dashboard.uploadFile2"/><br>
+                <span>Big Picture</span><br>
+                
+                <img ng-src="{{dashboard.editedItem.bigPictureUrl}}" width="100" height="100">
+                
+                <span>Old Big Picture</span><br>
+                
+                <img id="showPic2" width="100" height="100" />
+                <span>New Big Picture</span>
+              </div>
+          </div>
+        </div>
             <button type="submit" class="btn btn-info btn-lg">Save</button>
             <button type="button" class="btn btn-default btn-lg pull-right"
                     ng-click="dashboard.cancelEditing()">Cancel
